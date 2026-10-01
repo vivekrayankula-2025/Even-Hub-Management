@@ -1,0 +1,178 @@
+{
+  "info": {
+    "name": "EventHub – Vignan University API",
+    "description": "Complete API collection for EventHub. Run seed.js first, then test all endpoints here.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",        "value": "http://localhost:5000/api" },
+    { "key": "token_student",   "value": "" },
+    { "key": "token_organizer", "value": "" },
+    { "key": "event_id",        "value": "" }
+  ],
+  "item": [
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "Login – Student",
+          "event": [{ "listen": "test", "script": { "exec": ["var r = pm.response.json(); if(r.token) pm.collectionVariables.set('token_student', r.token);"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"snehitha@vignan.ac.in\",\n  \"password\": \"student123\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth","login"] }
+          }
+        },
+        {
+          "name": "Login – Organizer",
+          "event": [{ "listen": "test", "script": { "exec": ["var r = pm.response.json(); if(r.token) pm.collectionVariables.set('token_organizer', r.token);"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"prasad@vignan.ac.in\",\n  \"password\": \"organizer123\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth","login"] }
+          }
+        },
+        {
+          "name": "Login – External",
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"arjun@gmail.com\",\n  \"password\": \"external123\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth","login"] }
+          }
+        },
+        {
+          "name": "Register – New Student",
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Student\",\n  \"email\": \"test@vignan.ac.in\",\n  \"password\": \"test1234\",\n  \"role\": \"student\",\n  \"studentId\": \"22PA1A0999\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth","register"] }
+          }
+        },
+        {
+          "name": "Register – New Organizer",
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Organizer\",\n  \"email\": \"testorg@vignan.ac.in\",\n  \"password\": \"test1234\",\n  \"role\": \"organizer\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth","register"] }
+          }
+        },
+        {
+          "name": "Register – External User",
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test External\",\n  \"email\": \"external@gmail.com\",\n  \"password\": \"test1234\",\n  \"role\": \"external\",\n  \"college\": \"Osmania University\"\n}" },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth","register"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "EVENTS",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/events", "host": ["{{base_url}}"], "path": ["events"] }
+          }
+        },
+        {
+          "name": "Get Event by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/events/{{event_id}}", "host": ["{{base_url}}"], "path": ["events","{{event_id}}"] }
+          }
+        },
+        {
+          "name": "Create Event (Organizer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_organizer}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"New Tech Workshop 2026\",\n  \"description\": \"A hands-on workshop on emerging technologies.\",\n  \"shortDesc\": \"Learn the latest in tech.\",\n  \"category\": \"workshop\",\n  \"startDate\": \"2026-12-10\",\n  \"endDate\": \"2026-12-11\",\n  \"venue\": \"Lab Block 1\",\n  \"maxCapacity\": 100,\n  \"isUpcoming\": true,\n  \"contactInfo\": \"workshop@vignan.ac.in\"\n}" },
+            "url": { "raw": "{{base_url}}/events", "host": ["{{base_url}}"], "path": ["events"] }
+          }
+        },
+        {
+          "name": "Update Event (Organizer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_organizer}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Updated Event Title\",\n  \"maxCapacity\": 200\n}" },
+            "url": { "raw": "{{base_url}}/events/{{event_id}}", "host": ["{{base_url}}"], "path": ["events","{{event_id}}"] }
+          }
+        },
+        {
+          "name": "Delete Event (Organizer)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_organizer}}" }],
+            "url": { "raw": "{{base_url}}/events/{{event_id}}", "host": ["{{base_url}}"], "path": ["events","{{event_id}}"] }
+          }
+        },
+        {
+          "name": "Register for Event (Student)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_student}}" }],
+            "url": { "raw": "{{base_url}}/events/{{event_id}}/register", "host": ["{{base_url}}"], "path": ["events","{{event_id}}","register"] }
+          }
+        },
+        {
+          "name": "Cancel Registration (Student)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_student}}" }],
+            "url": { "raw": "{{base_url}}/events/{{event_id}}/register", "host": ["{{base_url}}"], "path": ["events","{{event_id}}","register"] }
+          }
+        },
+        {
+          "name": "Get Event Registrations (Organizer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_organizer}}" }],
+            "url": { "raw": "{{base_url}}/events/{{event_id}}/registrations", "host": ["{{base_url}}"], "path": ["events","{{event_id}}","registrations"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "USERS",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_student}}" }],
+            "url": { "raw": "{{base_url}}/users/profile", "host": ["{{base_url}}"], "path": ["users","profile"] }
+          }
+        },
+        {
+          "name": "Get My Registered Events",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_student}}" }],
+            "url": { "raw": "{{base_url}}/users/registered-events", "host": ["{{base_url}}"], "path": ["users","registered-events"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "HEALTH CHECK",
+      "item": [
+        {
+          "name": "API Running",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000", "host": ["http://localhost:5000"] }
+          }
+        }
+      ]
+    }
+  ]
+}
